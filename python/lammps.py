@@ -1333,11 +1333,13 @@ class PyLammps(object):
 
       lines = output.splitlines()
 
-      if len(lines) > 1:
-        return lines
-      elif len(lines) == 1:
-        return lines[0]
-      return None
+      if len(lines) == 1:
+        lines = lines[0]
+      elif len(lines) < 1:
+        lines = None
+
+      if lammps.has_mpi4py:
+        lines = self.lmp.comm.bcast(lines, root=0)
 
     return handler
 
