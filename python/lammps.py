@@ -1348,6 +1348,7 @@ class PyLammps(object):
 
       if lammps.has_mpi4py:
         lines = self.lmp.comm.bcast(lines, root=0)
+      return lines
 
     return handler
 
