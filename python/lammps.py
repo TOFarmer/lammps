@@ -884,7 +884,7 @@ class OutputCapture(object):
     return bool(r)
 
   # read the whole pipe
-  def read_pipe(self, pipe):
+  def _read_pipe(self, pipe):
     out = ""
     while self.more_data(pipe):
       out += os.read(pipe, 1024).decode()
@@ -892,7 +892,15 @@ class OutputCapture(object):
 
   @property
   def output(self):
-    return self.read_pipe(self.stdout_pipe_read)
+    """Returns LAMMPS library output
+
+    If using mpi4py, this output is only returned on rank 0 process. It should
+    then be broadcast to all ranks.
+
+    :return: str with captured LAMMPS library output or None
+    :rtype:  str or None
+    """
+    return self._read_pipe(self.stdout_pipe_read)
 
 
 class Variable(object):
